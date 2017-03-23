@@ -1,0 +1,252 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <title>Ten UNIX Commands Every Geek Should Know</title>
+
+  <meta name="presdate" content="20100206" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Ten UNIX Commands Every Geek Should Know</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Ten UNIX Commands Every Geek Should Know</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://svn.peknet.com/perl/slides/ten-unix-commands"
+      >http://svn.peknet.com/perl/slides/ten-unix-commands</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>1. kill</h1>
+      
+      <pre>
+# stop a process with pid 1234
+% kill 1234
+
+# stop a process with pid 1234, please
+% kill -1 1234
+
+# c'mon, die already
+% kill -15 1234
+
+# die! die! damn you!!
+% kill -9 1234
+      </pre>
+      
+    </div>
+    
+    <div class="slide">
+     <h1>2. ps</h1>
+     
+     <pre>
+# what processes are mine
+% ps -ef | grep `whoami`
+
+# what apache processes are running
+% ps -ef | grep http
+     </pre>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>3. top</h1>
+     
+     <pre>
+% top
+# 'q' to quit
+
+# on Linux, can sort by column while running
+% top
+# 'M' sorts by memory use
+     
+     </pre>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>4. grep</h1>
+     
+     <pre>
+# search inside all files, recursively, case-insensitive
+# and skip all .svn files
+% grep -r -i 'foo' . | grep -v .svn
+
+# search the output of another command
+% ls -1 | grep .pdf
+
+# output only matching file names
+% grep -r -i -l 'foo' .
+     </pre>
+          
+    </div>
+    
+    <div class="slide">
+     <h1>5. find</h1>
+     
+     <pre>
+# all files with .pdf extension
+% find . -name '*.pdf'
+
+# all files you own
+% find . -uid `whoami`
+
+# all directories, not files
+% find . -type d
+
+# all files, not directories
+% find . -type f
+    </pre>
+      
+    </div>
+    
+    <div class="slide">
+     <h1>6. xargs</h1>
+     
+     <pre>
+# change permissions for all files, skipping dirs
+% find . -type f | xargs chmod 664
+
+# change permissions for all dirs, skipping files
+% find . -type d | xargs chmod 775
+
+    </pre>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>7. watch</h1>
+
+     <pre>
+# real-time dismay as your disk fills up
+% watch df -h
+
+# ctrl-C to quit
+     </pre>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>8. tail</h1>
+     
+     <pre>
+# watch a log file
+% tail -f /path/to/apache/error_log
+
+# watch a log file for particular pattern
+% tail -f /path/to/busy/apache/access_log | grep 404
+    </pre>
+    
+    </div>
+
+    <div class="slide">
+     <h1>9. more (or less)</h1>
+
+     <pre>
+# read a file, a little at a time
+% more path/to/file
+
+# space bar to advance a page, 
+# return to advance a line,
+# 'q' to quit
+
+    </pre>
+    </div>
+
+    <div class="slide">
+     <h1>10. perl</h1>
+
+     <pre>
+# find and replace a string, creating a backup first
+% perl -pi.backup -e 's/before/after/g' file
+
+# iterate over all input, mangling certain lines
+% tail -f path/log | \
+  perl -n -e 'if (m/404/) { print "found $_" }'
+
+    </pre>
+
+   </div>
+   
+   <div class="slide">
+     <h1>11. man</h1>
+
+     <pre>
+# search for keywords in man page whatis file
+% man -k search
+
+# read the man man page
+% man man
+
+# the location of the man page
+% man -w grep
+
+# the system call, not user command
+% man 2 kill
+
+    </pre>
+
+   </div>
+   
+   <div class="slide">
+     <h1>etc</h1>
+
+     <pre>
+nohup, ctrl-Z, fg, bg, disown
+ssh
+vi
+cat
+echo
+df
+du
+sort
+date
+gzip
+tar
+netstat
+dig
+telnet
+chmod, chown, chgrp
+    </pre>
+
+   </div>
+
+
+  </div>
+</body>
+</html>

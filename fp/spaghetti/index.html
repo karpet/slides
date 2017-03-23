@@ -1,0 +1,472 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 January 2008), see www.w3.org" />
+
+  <title>Unravelling the Spaghetti: Perl Best Practices and
+  Existing Code</title><!-- metadata -->
+  <meta name="generator" content="S5" />
+  <meta name="version" content="S5 1.1" />
+  <meta name="presdate" content="20080216" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Unravelling the Spaghetti: Perl Best Practices and
+      Existing Code</h1>
+
+      <h2>12 Steps toward Programmer Recovery</h2>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Unravelling the Spaghetti: Perl Best Practices and
+      Existing Code</h1>
+
+      <h2>12 Steps toward Programmer Recovery</h2>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://www.peknet.com/~karpet/slides/fp/spaghetti">http://www.peknet.com/~karpet/slides/fp/spaghetti</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>Step 1: Brokenness</h1>
+
+      <blockquote>
+        We admitted we were powerless over entropy and that our
+        code had become unmanageable.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Real life #129</h1>
+
+      <div>
+        <pre>
+ % ls -l
+ -rwxr-xr-x 1 pek     2008-01-22  logout.cgi.new
+ -rwxr-xr-x 1 joe     2007-03-02  logout.cgi.broken
+ -rwxr-xr-x 1 sam     2006-09-12  logout.cgi.old
+ -rwxr-xr-x 1 ann     2005-03-26  logout.cgi.032605
+ -rwxr-xr-x 1 lil     2004-06-10  logout.cgi~
+ -rwxr-xr-x 1 fred    1999-01-08  logout.cgi
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 2: Seeking</h1>
+
+      <blockquote>
+        Came to believe that a Power greater than ourselves could
+        restore us to sanity.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Sanity is hard work.</h1>
+
+      <div>
+        A toolkit:
+
+        <ul>
+          <li><a href=
+          "http://subversion.tigris.org/">Subversion</a></li>
+
+          <li><a href="http://search.cpan.org/">CPAN</a></li>
+
+          <li><a href="http://trac.edgewall.org/">Trac</a></li>
+
+          <li><a href=
+          "http://books.google.com/books?id=yMMRnPQ7CSMC;dq=perl+best+practices;pg=PP1;ots=_j55nmajMi;sig=n-l3GZcPjFOqPNEFBHtXXFZO30Y;hl=en;prev=http://www.google.com/search?sourceid=mozclient;ie=utf-8;oe=utf-8;q=perl+best+practices;sa=X;oi=print;ct=title;cad=one-book-with-thumbnail">
+          Perl Best Practices</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 3: Repentance</h1>
+
+      <blockquote>
+        Made a decision to turn our style over to the care of
+        DCONWAY as we understood him.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>"...as we understood him"</h1>
+
+      <div>
+        <pre>
+
+   unless ( $you-&gt;have( $good_reason ) ) {
+       $you-&gt;follow( 'conventions' );
+   }
+
+</pre>
+
+        <ul>
+          <li>talk amongst yourselves</li>
+
+          <li>reduce $grok_time</li>
+
+          <li><code>diff -u</code></li>
+
+          <li>easier to refactor</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Brevity != godliness</h1>
+
+      <div>
+        Don't:
+        <pre>
+
+   $you-&gt;follow( 'conventions' ) 
+      unless $you-&gt;have( $good_reason );
+
+</pre>Do:
+        <pre>
+
+   unless ( $you-&gt;have( $good_reason ) ) {
+       $you-&gt;follow( 'conventions' );
+       $you-&gt;grumble;
+       $you-&gt;get_paid and $you-&gt;get_over_it;
+   }
+
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Larry Wall said:</h1>
+
+      <blockquote>
+        ...stylistic limits should be self-imposed, or at most
+        policed by consensus among your buddies.
+      </blockquote>But Damian Conway warns against <i>Intuitive
+      Programmer Syndrome</i>
+    </div>
+
+    <div class="slide">
+      <h1>Step 4: Scrutiny</h1>
+
+      <blockquote>
+        Made a searching and fearless moral inventory of our code.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Put it in Subversion now, clean up later</h1>
+
+      <div>
+        <pre>
+ % svn mkdir http://http://svn.my.org/code -m init
+ % cd my/file/tree
+ % svn co http://http://svn.my.org/code .
+ % svn add *
+ % svn commit -m 'import'
+ # peek at every thing in /code and toss chunks
+ % svn rm http://svn.my.org/code/crufty -m 'bye'
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 5: Confession</h1>
+
+      <blockquote>
+        Admitted to $Boss, to ourselves and to another human being
+        the exact nature of our wrongs.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>If I could do it over again...</h1>
+
+      <div>
+        Poorly-written Perl reflects poorly on the community.
+
+        <ul>
+          <li>
+            <pre>
+  # serenity prayer
+  use strict;
+  use warnings;         
+</pre>
+          </li>
+
+          <li>optimize for developer time</li>
+
+          <li>avoid magic -- make it plain</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>...and again...</h1>
+
+      <div>
+        <ul>
+          <li>one package == one .pm file. "Have another file.
+          They're free."</li>
+
+          <li>globals == bad</li>
+
+          <li>use <code>local</code> for punctuation vars like
+          <code>$/</code></li>
+
+          <li>chained join/map/grep/sort/grep/map/split ...</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 6: Agony</h1>
+
+      <blockquote>
+        Were entirely ready to have Perl::Critic identify all these
+        defects of character.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Be Brave</h1>
+
+      <div>
+        <pre>
+  use Perl::Critic;
+  my $file = shift;
+  my $critic = Perl::Critic-&gt;new();
+  my @violations = $critic-&gt;critique($file);
+  print @violations;  
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 7: Baptism</h1>
+
+      <blockquote>
+        Humbly asked Perl::Tidy to remove our shortcomings.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Vim!</h1>
+
+      <div>
+        <pre>
+ % cat ~/.vimrc
+ map t :%!perltidy
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Nedit!!</h1>
+
+      <div>
+        <pre>
+    nedit.shellCommands: \
+        perltidy-pbp:F5::ESL:\n\
+                perltidy -pbp % &gt; %.tdy &amp;&amp; mv %.tdy %\n
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 8: Recompense</h1>
+
+      <blockquote>
+        Made a list of all persons we had harmed, and became
+        willing to make amends to them all.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Real life #409</h1>
+      <pre>
+ my @amends_needed = qw(
+    guy_who_inherited_my_code_at_old_job
+ );
+ 
+ foreach my $person (@amends_needed) {
+    buy_beer( $person );
+ }
+</pre>
+    </div>
+
+    <div class="slide">
+      <h1>Step 9: Testing</h1>
+
+      <blockquote>
+        Made direct amends to such people wherever possible, except
+        when to do so would injure them or others.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>"...would injure them or others"</h1>Test! Test!! Test!!!
+
+      <ul>
+        <li>You already write tests. They're called throw-away
+        scripts or prototypes or proofs-of-concept.</li>
+
+        <li>Parallel universe</li>
+
+        <li>Test::More</li>
+
+        <li>Test::Pod::Coverage</li>
+
+        <li>Test::Pod</li>
+
+        <li>Test::WWW::Mechanize</li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <h1>Let go and let POD</h1>
+
+      <div>
+        <ul>
+          <li>Keep your POD close at hand.</li>
+
+          <li>Be kind to your self.</li>
+
+          <li>Build it in to the project timeline.</li>
+
+          <li>Module::Starter</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Step 10: Perseverance</h1>
+
+      <blockquote>
+        Continued to take personal inventory and when we were wrong
+        promptly admitted it.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Carp + Data::Dump</h1><i>Catastrophic failure is a good
+      thing.</i>
+
+      <ul>
+        <li>croak() at the first sign of trouble.</li>
+
+        <li>Carp::cluck() for ad hoc stack traces.</li>
+
+        <li>warn() is my favorite debugger.</li>
+
+        <li>
+          <pre>
+ use Data::Dump qw( dump );
+ # do stuff
+ dump( $self );
+ dump( \%my_hash );
+</pre>
+        </li>
+      </ul>
+    </div>
+
+    <div class="slide">
+      <h1>Step 11: Practice</h1>
+
+      <blockquote style="margin-top:1em">
+        Sought through prayer and meditation to improve our
+        conscious contact with PBP, as we understood them, praying
+        only for knowledge of their will for us and the power to
+        carry that out.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>TMTOWTDI: the anti-hubris</h1>
+      <pre>
+  while ( $you-&gt;get( 'older' ) ) {
+      $you-&gt;lose( $need_to_be_right );
+  }
+</pre>
+    </div>
+
+    <div class="slide">
+      <h1>Step 12: Evangelism</h1>
+
+      <blockquote>
+        Having had a spiritual awakening as the result of these
+        steps, we tried to carry this message to Perl Mongers
+        everywhere and to practice these principles in all our
+        affairs.
+      </blockquote>
+    </div>
+
+    <div class="slide">
+      <h1>Credits</h1>
+
+      <div>
+        <ul>
+          <li><a href=
+          "http://www.12step.org/">http://www.12step.org/</a></li>
+
+          <li>Perrin Harkins for his 2006 OSCON talk on
+          "Low-Maintenance Perl"</li>
+
+          <li>Matt Trout for "warn() is my favorite debugger"</li>
+
+          <li>Marvin Humphrey for "catastrophic failure is a good
+          thing."</li>
+
+          <li>Lee Carmichael for beers and good conversation on
+          what <b>not</b> to do.</li>
+
+          <li>Bridget Kromhout for reviewing these slides</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>One Line at a Time</h1><br />
+      <img src="http://imgs.xkcd.com/comics/goto.png" height="302"
+      width="1110" /> <a href="http://xkcd.com/292/">xkcd ftw</a>
+    </div>
+  </div>
+</body>
+</html>

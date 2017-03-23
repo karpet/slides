@@ -1,0 +1,248 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <title>Profiling and Optimizing Perl with Devel::NYTProf and XS</title>
+
+  <meta name="presdate" content="20100206" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Profiling and Optimizing Perl<br/>
+      with Devel::NYTProf and XS</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Profiling and Optimizing Perl<br/>
+      with Devel::NYTProf and XS</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://www.peknet.com/slides/optimizing/"
+      >http://www.peknet.com/slides/optimizing/</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>Premature Optimization</h1>
+      
+      <blockquote>
+      "We should forget about small efficiencies, 
+      say about 97% of the time: 
+      premature optimization is the root of all evil."
+      -Donald Knuth
+      </blockquote>
+      
+    </div>
+    
+    <div class="slide">
+     <h1>Mature Optimization</h1>
+     
+     <div>
+     
+      <ul>
+       <li>What about mature optimization?</li>
+       <li>How do I know which 3% to worry about?</li>
+       <li>Is it the algorithm or the language?</li>
+      </ul>
+      
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>The Three Percent</h1>
+     
+     <ul>
+      <li>Don't benchmark, profile.</li>
+      <li>Venerable Devel::DProf</li>
+      <li>Devel::NYTProf</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Devel::NYTProf</h1>
+     
+     <ul>
+      <li>HTML output</li>
+      <li>Line-by-line as well as by sub and file</li>
+      <li>So thorough it's scary</li>
+     </ul>
+          
+    </div>
+    
+    <div class="slide">
+     <h1>Devel::NYTProf examples</h1>
+     
+     <a href="http://svn.peknet.com/perl/profiling"
+      >http://svn.peknet.com/perl/profiling</a>      
+      
+    </div>
+    
+    <div class="slide">
+     <h1>Observations about Perl as a language</h1>
+     
+     <ul>
+      <li>Optimized for developer time.</li>
+      <li>Optimized for ASCII.</li>
+      <li>Malloc/free is expensive, so Perl takes
+      without giving.</li>
+      <li>Tight loops (char-level iterations) are expensive.</li>
+      <li>Function calls, especially methods, are expensive.</li>
+      <li><a href="http://perl.peknet.com/changeset/1670/trunk/Search-Tools/lib/Search/Tools/Transliterate.pm"
+      >Regex can be expensive.</a></li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Taking the plunge into C and XS</h1>
+
+     <ul>
+      <li>When speed really matters.</li>
+      <li>When you have more time than money.</li>
+      <li>When you're convinced it's the language, not the algorithm.</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Stay away from XS</h1>
+     
+     <blockquote>
+      Render unto C what is C's,
+      and render unto Perl what is Perl's.
+     </blockquote>
+    
+    </div>
+
+    <div class="slide">
+     <h1>#include your C</h1>
+
+     <pre>
+/* pure C helpers */
+#include "search-tools.c"
+
+/***************************************************/
+MODULE = Search::Tools       PACKAGE = Search::Tools
+
+PROTOTYPES: enable
+</pre>
+    </div>
+
+    <div class="slide">
+     <h1>Keep your XS minimal</h1>
+
+     <pre>
+boolean
+is_ascii(string)
+    SV* string;
+
+    CODE:
+        RETVAL = st_is_ascii(string);
+
+    OUTPUT:
+        RETVAL
+
+</pre>
+
+   </div>
+
+    
+    <div class="slide">
+     <h1>Late nights and hair loss</h1>
+    
+     <ul>
+      <li><code>perlguts</code>, 
+      <code>perlapi</code>,
+      <code>perlxs</code>, 
+      <code>perlcall</code>:
+      <br/>
+      write them upon the tablet of thy heart.</li>
+      <li>Reference counting is now <b>your</b> job.</li>
+      <li>Portability.</li>
+      <li>Perl versions.</li>
+     </ul>
+    
+    </div>
+    
+    <div class="slide">
+     <h1>If performance matters, it's worth it</h1>
+     
+     <a href="http://perl.peknet.com/browser/Search-Tools/trunk/example/bench.pl"
+     >XS vs PP Search::Tools Tokenizer</a>
+     <pre>
+                          Rate pure-perl-greek xs-greek pure-perl-ascii xs-ascii xs-ascii-heatseeker-qr
+pure-perl-greek         1171/s              --     -60%            -87%     -95%                   -96%
+xs-greek                2959/s            153%       --            -66%     -87%                   -91%
+pure-perl-ascii         8696/s            643%     194%              --     -62%                   -74%
+xs-ascii               22727/s           1841%     668%            161%       --                   -32%
+xs-ascii-heatseeker-qr 33333/s           2747%    1027%            283%      47%                     --
+
+</pre>
+     
+    </div>
+    
+    <div class="slide">
+      <h1>Further Reading</h1>
+
+      <div>
+        <ul>
+          <li>my $perl_projects = <a href="http://perl.peknet.com/">http://perl.peknet.com/</a></li>
+          <li><a href="http://svn.peknet.com/perl/profiling"
+          >http://svn.peknet.com/perl/profiling</a></li>
+          <li><a href="http://perl.peknet.com/wiki/SearchTools"
+          >http://perl.peknet.com/wiki/SearchTools</a></li>
+          <li><a href="http://www.acm.org/ubiquity/views/v7i24_fallacy.html"
+          >The Fallacy of Premature Optimization</a></li>
+          <li><a href="http://www.flounder.com/optimization.htm"
+          >Optimization: Your worst enemy</a></li>
+        </ul>
+      </div>
+      
+    </div>
+    
+    <div class="slide">
+     <h1>Credits</h1>
+     
+     <ul>
+      <li>Henry at zen.co.za for prompting the Snipper refactor</li>
+      
+     </ul>
+    </div> 
+
+  </div>
+</body>
+</html>

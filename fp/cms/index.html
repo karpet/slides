@@ -1,0 +1,333 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 January 2008), see www.w3.org" />
+
+  <title>Content Management with CatalystX::CMS</title><!-- metadata -->
+  <meta name="generator" content="S5" />
+  <meta name="version" content="S5 1.1" />
+  <meta name="presdate" content="20090207" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Content Management with CatalystX::CMS</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Content Management with CatalystX::CMS</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://www.peknet.com/~karpet/slides/fp/cms">http://www.peknet.com/~karpet/slides/fp/cms</a></h4>
+    </div>
+    
+    
+    <div class="slide">
+      <h1>What CatalystX::CMS Is Not</h1>
+
+      <div>
+        <ul>
+         <li>Shrink-wrapped magic pill</li>
+         <li>Drupal</li>
+         <li>Workflow nirvana</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <h1>What CatalystX::CMS Offers</h1>
+
+      <div>
+        <ul>
+         <li>Template editor (with YUI Rich Text Editor)</li>
+         <li>CatalystX::CMS::Action class</li>
+         <li>Template Toolkit</li>
+         <li>Subversion</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <h1>Simple case</h1>
+
+<pre>package MyApp::Controller::Foo;
+use base qw( CatalystX::CMS::Controller );
+
+# view the foo/bar.tt file with
+# /foo/bar
+
+# edit the foo/bar.tt file with
+# /foo/bar?cxcms=edit
+
+sub bar : Local { }
+
+</pre>
+    </div> 
+    
+    <div class="slide">
+      <h1>Less simple case</h1>
+
+<pre>package MyApp::Controller::Foo;
+use base qw( CatalystX::CMS::Controller );
+
+__PACKAGE__->config( 
+    action_class_per_action => 1 
+);
+
+# view the foo/bar.tt file with
+# /foo/bar
+# edit the foo/bar.tt file with
+# /foo/bar?cxcms=edit
+
+sub bar : Local ActionClass('CMS') { }
+
+# can't edit /foo/bing
+sub bing : Local { }
+</pre>
+    </div>
+    
+    <div class="slide">
+      <h1>Under the hood</h1><br />
+      <img src="http://imgs.xkcd.com/comics/flow_charts.png" 
+       /> 
+      <br/>
+      <a href="http://xkcd.com/518/">xkcd ftw</a>
+    </div>
+
+<!-- slide -->  
+    <div class="slide">
+      <h1>ActionClass</h1>
+
+        <div>
+          Catalyst::Action::CMS isa CatalystX::CMS::Action
+<pre>
+sub bar : Local ActionClass('CMS') { }
+</pre>
+        </div>
+
+    </div>
+  
+<!-- slide -->  
+    <div class="slide">
+      <h1>Configuration: classes</h1>
+<pre> package MyApp;
+ MyApp->config(
+    cms => {
+        model_name             => 'CMS',
+        view_name              => 'CMS',
+        actionclass_per_action => 0,
+    }
+ );
+</pre>
+
+    </div> 
+
+<!-- slide -->
+    <div class="slide">
+      <h1>Configuration: GUI options</h1>
+
+<pre> package MyApp;
+ MyApp->config(
+    cms => {
+        use_editor             => 1,
+        use_layout             => 1,
+        editor                 => {
+            height => '300',
+            width  => '550',
+        },
+    }
+ );
+</pre>
+
+    </div> 
+
+<!-- slide -->
+    <div class="slide">
+      <h1>Configuration: model and storage</h1>
+
+<pre> package MyApp;
+ MyApp->config(
+    cms => {
+        default_type    => 'html',
+        default_flavour => 'default',   
+        lock_period     => 3600,
+        root => {
+            r  => [ MyApp->path_to('root') ],
+            rw => [ '/path/to/svn/workdir' ],
+        },      
+    }
+ );
+</pre>
+
+    </div>
+    
+<!-- slide -->
+    <div class="slide">
+      <h1>Model: Manager</h1>
+
+    <div>
+     <h2>CatalystX::CMS::Model</h2>
+     
+        <ul>
+            <li>isa CatalystX::CRUD::Model::File</li>
+            <li>returns CatalystX::CRUD::Page objects</li>
+        </ul>
+    </div>
+    </div>
+    
+<!-- slide -->
+    <div class="slide">
+      <h1>Model: Object</h1>
+
+    <div>
+     <h2>CatalystX::CMS::Page</h2>
+     
+        <ul>
+            <li>isa CatalystX::CRUD::Object</li>
+            <li>delegates to CatalystX::CMS::File</li>
+        </ul>
+    </div>
+    </div>
+    
+<!-- slide -->
+    <div class="slide">
+      <h1>Model: Storage</h1>
+
+    <div>
+     <h2>CatalystX::CMS::File</h2>
+     
+        <ul>
+            <li>isa SVN::Class::File</li>
+            <li>isa Path::Class::File::Lockable</li>
+            <li>TODO: other storage classes?</li>
+        </ul>
+    </div>
+    </div>
+
+<!-- slide -->
+    <div class="slide">
+      <h1>Model: Subversion</h1>
+
+    <div>
+     <h2>SVN::Class</h2>
+     
+        <ul>
+            <li>isa Path::Class</li>
+            <li>uses IPC::Cmd and the 'svn' command</li>
+        </ul>
+    </div>
+    </div>
+
+<!-- slide -->
+    <div class="slide">
+      <h1>Model: Locking</h1>
+
+    <div>
+     <h2>Path::Class::File::Lockable</h2>
+     
+        <ul>
+            <li>isa Path::Class::File</li>
+            <li>non-binding, advisory locks</li>
+            <li>uses File::NFSLock to get lock files</li>
+        </ul>
+    </div>
+    </div>
+
+<!-- slide -->
+    <div class="slide">
+      <h1>View: TT</h1>
+
+    <div>
+     <h2>CatalystX::CMS::View</h2>
+     
+        <ul>
+            <li>isa Catalyst::View::TT</li>
+            <li>type and flavour</li>
+            <li>sets <tt>CMS</tt> hashref with relevant paths</li>
+        </ul>
+    </div>
+    </div>
+    
+<!-- slide -->
+    <div class="slide">
+      <h1>View: YUI</h1>
+
+    <div>
+     <h2>Yahoo User Interface toolkit</h2>
+     <a href="http://developer.yahoo.com/yui/">http://developer.yahoo.com/yui/</a>
+     
+        <ul>
+            <li>Rich Text Editor</li>
+            <li>Layout Manager</li>
+            <li>TreeView</li>
+            <li>Resizable</li>
+            <li>Buttons and Animation</li>
+            <li>Docs and Examples</li>
+        </ul>
+    </div>
+    </div>
+    
+<!-- slide -->
+    <div class="slide">
+      <h1>Oh yeah. Workflow.</h1>
+
+    <div>
+     <h2>TMTOWTDI</h2>
+     
+        <ul>
+            <li>Subversion branching</li>
+            <li>Multiple workspaces</li>
+        </ul>
+    </div>
+    </div>
+
+<!-- slide -->
+    <div class="slide">
+      <h1>Credits</h1>
+
+      <div>
+        <ul>
+          <li>Bridget Kromhout for reviewing these slides</li>
+          <li>Minnesota Supercomputing Institute for sponsoring development.</li>
+          <li>https://svn.msi.umn.edu/sw/perl/</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+  <title>Introduction to Object Oriented Perl</title><!-- metadata -->
+  <meta name="generator" content="S5" />
+  <meta name="version" content="S5 1.1" />
+  <meta name="presdate" content="20100422" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Introduction to Object Oriented Perl</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Introduction to Object Oriented Perl</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://peknet.com/slides/perl-oo-tut/">http://peknet.com/slides/perl-oo-tut/</a></h4>
+    </div>
+
+    <div class="slide">
+     <h1>What we'll cover</h1>
+     <ul>
+      <li>Packages and classes</li>
+      <li>References and objects</li>
+      <li>Subroutines and methods</li>
+      <li>Encapsulation, Inheritance and Polymorphism</li>
+     </ul>
+     
+     <div>
+     Goal: feel comfortable reading object-oriented Perl code.
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Idiom</h1>
+     
+     <div>Unlike most programming languages, Perl relies on idiom
+     and style and convention, rather than rigid syntax patterns, to enforce
+     its readability.
+     </div>
+          
+    </div>
+    
+    <div class="slide">
+     <h1>TIMTOWTDI (There Is More Than One Way To Do It)</h1>
+     
+     <div>However, there are usually only a couple of Best Ways to do it.
+     </div>
+
+    </div>
+    
+    <div class="slide">
+     <h1>Rules</h1>
+     
+     <ul>
+      <li>Be polite.</li>
+      <li>If it isn't documented, it doesn't exist.</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Conventions</h1>
+     
+     <ul>
+      <li>Objects are blessed hash references. But don't peek.</li>
+      <li>Private methods start with one or more underscore characters (_).</li>
+      <li>Don't step in someone else's namespace.</li>
+     </ul>
+    </div>
+    
+    <div class="slide">
+     <h1>Packages</h1>
+     
+     <div>A <tt>package</tt> is a namespace for subroutines
+     and variables. In Perl, a class and a package are the same thing.
+     </div>
+     <div>
+     <pre>
+     package MyClass;
+     </pre>
+     </div>
+     <div>All variables and subroutines belong to a package. The default
+     package name is <tt>main</tt>.
+     </div>
+     <div>
+     See <tt>code/class.pl</tt>
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>References</h1>
+     
+     <div>A reference is a scalar variable that <i>refers</i> to another
+     variable. A Perl reference is analogous to a C pointer.
+     </div>
+     
+     <div>
+      <pre>
+       my @array = (1, 2, 3);
+       my $array_ref = \@array;
+       push @$array_ref, 4;
+       print join(', ', @array); # 1, 2, 3, 4
+      </pre>
+     </div>
+     
+     <div>
+     See <tt>code/references.pl</tt> and <tt>code/complex-references.pl</tt>.
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>The Arrow Operator</h1>
+     
+     <div>The arrow operator <tt>-></tt> is used to dereference variables and call
+     methods. For methods, it means "pass the thing on the left as the first argument
+     to the thing on the right."
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Objects</h1>
+     
+     <div>An object is a reference that has been blessed into a package.</div>
+     
+     <div>
+      <pre>
+       my %hash = ( foo => 123 );
+       my $object = bless( \%hash, 'MyClass' );
+      </pre>
+     </div>
+     
+     <div>
+     See <tt>code/weather.pl</tt> and <tt>code/Weather.pm</tt>
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Methods</h1>
+     
+     <div>A method is a subroutine defined within a package and designed to be invoked (called)
+     by objects. A method expects the object or the class name as its first argument.</div>
+     
+     <div>
+      <pre>
+       package MyClass;
+       
+       sub my_method {
+           my $self = shift(@_); # $self == $object
+           
+       }
+       
+       my $object = bless( {}, 'MyClass' );
+       $object->my_method();
+      </pre>
+     </div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Reserved method names</h1>
+     
+     <ul>
+      <li>can</li>
+      <li>isa</li>
+      <li>DESTROY</li>
+      <li>AUTOLOAD</li>
+     </ul>
+     
+    </div>
+    
+    
+    <div class="slide">
+     <h1>Encapsulation</h1>
+     
+     <div>What's mine is mine, what's yours is yours.</div>
+     <div>What happens in Vegas, stays in Vegas.</div>
+     <div>Variables and methods belong to only one package (class) at a time.</div>
+     <div>A pattern, not a rule.</div>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Inheritance</h1>
+    
+     <ul>
+      <li><tt>UNIVERSAL</tt> - all classes inherit from this class</li>
+      <li><tt>SUPER</tt> - used to call a method in a parent (super)class.</li>
+      <li><tt>@ISA</tt> - reserved array variable holds the names of all superclasses.</li>
+     </ul>
+     
+     <div>
+     See <tt>code/storm.pl</tt>.
+     </div>
+     
+    </div>
+    
+    
+    <div class="slide">
+     <h1>Polymorphism</h1>
+     
+     <div>A method is said to be <i>polymorphic</i> if its behavior changes based
+     on the types and/or numbers of arguments passed to it. This includes especially
+     the calling object.
+     </div>
+     
+     <div>In Perl, all methods are polymorphic (no strict method signatures).</div>
+    
+    </div>
+    
+    <div class="slide">
+      <h1>Further Reading</h1>
+
+      <div>
+        <ul>
+          <li><a href="http://perldoc.perl.org/perlboot.html">perlboot - Beginner's object oriented tutorial</a></li>
+          <li><a href="http://perldoc.perl.org/perltooc.html">perltooc - Tom's OO Tutorial for Class Data in Perl</a></li>
+          <li><a href="http://perldoc.perl.org/perlobj.html">perlobj - Perl objects</a></li>
+          <li><a href="http://perldoc.perl.org/perltoot.html">perltoot - Tom's object-oriented tutorial for perl</a></li>
+          <li><a href="http://www.amazon.com/Object-Oriented-Perl-Comprehensive-Programming/dp/1884777791/ref=sr_1_1?ie=UTF8&s=books&qid=1271034466&sr=8-1"
+          ><i>Object Oriented Perl</i> by Damian Conway</a></li>
+          <li><a href="http://www.amazon.com/Intermediate-Perl-Randal-L-Schwartz/dp/0596102062/ref=sr_1_1?ie=UTF8&s=books&qid=1271034571&sr=1-1"
+          ><i>Intermediate Perl</i> by Randal L. Schwartz and brian d foy</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

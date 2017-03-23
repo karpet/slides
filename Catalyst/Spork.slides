@@ -1,0 +1,182 @@
+----
+presentation_topic: Catalyst
+presentation_title: Catalyst - An Introduction to the Perl Web Framework
+presentation_place: Minneapolis, MN
+presentation_date: January 10, 2007
+----
+== What is Catalyst?
+
+Catalyst is:
+* a web application framework
+* MVC
+* TMTOWTDI
+* fun
+
+----
+== A Web Application Framework
+
+Evolution:
+* cgi-lib.pl (1995)
+* CGI.pm (1995)
+* mod_perl (1996)
+* frameworks
+** CGI::Application (2003)
+** Maypole (2004) (precursor to Catalyst)
+** Jifty (2005)
+** Catalyst (2005)
+
+----
+== MVC: Model, View, Controller
+
+* A design paradigm.
+http://st-www.cs.uiuc.edu/users/smarch/st-docs/mvc.html
+
+* "Separation of concerns." -- Andy Wardley
+http://www.andywardley.com/computers/web/separation.html
+
+* See also:
+http://dev.catalyst.perl.org/wiki/NecessaryBackgroundKnowledge
+
+
+----
+== TMTOWTDI: There's More Than One Way To Do It
+
+The(?) Perl Motto.
+
+But also DRY: Don't Repeat Yourself.
+
+----
+== Fun
+
+Remember?
+
+----
+== Getting Started
+
+* Installation
+** CPAN: The dark side of TMTOWTDI.
+* Read The Manual
+** http://search.cpan.org/dist/Catalyst-Manual/
+* Examples
+** http://dev.catalyst.perl.org/
+** http://dev.catalyst.perl.org/wiki/DocLinks/AdventCalendar
+** http://dev.catalyst.perl.org/wiki/DocLinks/AdventCalendar2006
+
+----
+== Ok, so really. What is it?
+
+----
+== A powerful dispatcher of URLs to methods
+
+Directly:
+
+ package MyApp::Controller::Foo;
+ sub hello : Local
+ {
+    my ($self,$c) = @_;
+    $c->response->body('Hello Minneapolis!');
+ }
+ # accessed via /foo/hello
+
+----
+== More power
+
+ sub login :Global {    # /login
+ sub one : Path("foo")  # /foo/foo
+ sub two : Path("/bar") # /bar
+ sub three :Path {      # /foo/*
+ 
+----
+== It wouldn't be Perl without some Regular Expressions
+
+ sub foo :Regex("/foo/(.*)/bar") {
+ #
+ # Matches in $c->snippets
+ #
+ 
+ sub bar :LocalRegex("baz/(.*)/biz") {
+ #
+ # /foo/baz/(.*)/biz
+
+----
+== Workin' on a Chain(ed) Gang
+
+My current favorite:
+
+ sub fetch : PathPart('cool/url/crud') Chained('/') CaptureArgs(1) {
+    my ($self, $c, $id) = @_;
+    $c->stash->{object} = $c->model('SomeCrud')->fetch($c, id => $id);
+    $c->stash->{form} = MyForm->new;
+ }
+ sub edit : PathPart Chained('fetch') Args(0) {
+ sub save : PathPart Chained('fetch') Args(0) {
+ sub view : PathPart Chained('fetch') Args(0) {
+ 
+ # CRUD-y goodness with:
+ # /cool/url/crud/101/edit, /cool/url/crud/101/save, /cool/url/crud/101/view
+
+----
+== Dispatch Helpers
+
+* auto()
+* begin()
+* end()
+* default()
+* index()
+
+
+----
+== A clean way of linking your favorite data model(s) and presentation layer(s)
+* DBIx::Class, Class::DBI, Rose::DB::Object, LDAP, SVN, etc.
+* Template::Toolkit, HTML::Mason, HTML::Template, etc.
+
+
+----
+== Yummy Plugin Goodness
+
+* Configuration
+* Authentication/Authorization
+* Sessions
+* Logging
+* Scheduling
+* Browser detection
+* Caching
+* Ajax
+* I18N and L10N
+* ... and so much more! It slices! It dices!! Look at that tomato!!!
+
+----
+== Friendly OO Patterns
+
+Create your own subclass-able controllers, models, views
+
+ package MyApp::Controller::Foo;
+ use base qw( MyApp::Base::Controller::CRUD );
+ 1;
+
+One way to organize them:
+
+ % ls MyApp/lib/MyApp/Controller
+   Foo.pm
+ % ls MyApp/lib/MyApp/Base/Controller
+   CRUD.pm
+
+----
+== Friendly Dev Environment
+
+* built-in test server (with auto-restart on code change)
+* multiple logging levels
+* all errors get caught and debug page displayed
+* Static::Simple plugin
+
+----
+== Fun
+
+Spend time writing code that *does* stuff, rather than
+re-inventing basic infastructure for each new application.
+
+----
+== See Also
+* http://shadowcatsystems.co.uk/static/london/catalyst.xul
+* http://cgiapp.erlbaum.net/cgi-bin/cgi-app/index.cgi?CatalystCompared
+* http://www.perl.com/pub/a/2005/06/02/catalyst.html

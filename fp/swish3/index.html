@@ -1,0 +1,297 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+
+  <title>Building a High Performance Search Engine with Perl and Swish3</title><!-- metadata -->
+  <meta name="generator" content="S5" />
+  <meta name="version" content="S5 1.1" />
+  <meta name="presdate" content="20100206" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Building a High Performance Search Engine with Perl and Swish3</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Building a High Performance Search Engine with Perl and Swish3</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://peknet.com/slides/swish3/">http://peknet.com/slides/swish3/</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>In the beginning was SWISH</h1>
+
+    <ul>
+      <li>Simple Web Indexing System for Humans</li>
+      <li>Circa 1995, by Kevin Hughes</li>
+      <li>Open-sourced in 1997 under the (L)GPL</li>
+      <li>Used by Apache, O'Reilly, Intel, Xerox, Texas Instruments, 
+      academic libraries, et al.</li>
+    </ul>
+    
+    </div>
+
+    <div class="slide">
+      <h1>A patchy project</h1>
+      
+    <ul>
+      <li>Patches coalesced into a new project,
+      adopted by Roy Tennant, hosted at UC Berkeley: 
+      SWISH-E (the "E" is for "Enhanced")</li>
+      <li>Version 2.0, circa 2000</li>
+      <li>Version 2.4 with C and Perl libraries, circa 2003</li>
+      <li>Spelling changed to "Swish-e", circa 2004</li>
+      <li>License reworked in 2005: GPL with library exception</li>
+      <li>Current verison 2.4.7, circa 2009</li>
+    </ul>
+    
+    </div>
+    
+    <div class="slide">
+      <h1>Limitations of 2.4.x</h1>
+      
+    <ul>
+      <li>No Unicode support (single-byte encodings only)</li>
+      <li>Does not scale well past a few million documents</li>
+      <li>No stable incremental index format</li>
+      <li>Opaque (undocumented, binary) index format</li>
+    </ul>
+    
+    </div>
+    
+    <div class="slide">
+      <h1>Swish3</h1>
+      
+    <ul>
+      <li>Five years in the making: <a href="http://blog.peknet.com/projects/swish/original_idea"
+      >http://blog.peknet.com/projects/swish/original_idea</a></li>
+      <li>Manifesto: <a href="http://blog.peknet.com/projects/swish/whySwish3"
+      >http://blog.peknet.com/projects/swish/whySwish3</a></li>
+      <li>UTF-8 support</li>
+      <li>Pluggable to other IR libraries (Xapian, KinoSearch, et al)</li>
+      <li>Built around libxml2 (GNOME XML parser)</li>
+    </ul>
+    
+    </div>
+     
+    <div class="slide">
+      <h1>Swish3 is like Perl6</h1>
+      
+      <ul>
+       <li>Primarily a specification, with multiple possible implementations</li>
+       <li>It's a taken a loooong time to reach a stable official release
+       of something you can pick up and use</li>
+      </ul>
+    </div>
+    
+    <div class="slide">
+     <h1>Swish3 is like DBI or CHI</h1>
+     
+     <ul>
+      <li>High-level</li>
+      <li>Defines an internal API, which backend engines must implement</li>
+      <li>Defines an external API, hiding individual engine syntax</li>
+      <li>Can still use the native engine's code directly</li>
+     </ul>
+     
+    </div>
+
+    <div class="slide">
+     <h1>Aside: Anatomy of a search engine</h1>
+     
+     <div>
+        Every search application has these basic five
+        components:
+
+        <ol>
+          <li>aggregator</li>
+          <li>normalizer</li>
+          <li>analyzer</li>
+          <li>indexer</li>
+          <li>searcher</li>
+        </ol>
+        
+        <div>
+        Swish3 does (1) and (2), and optionally (3),
+        deferring (4) and (5) to the backend engines.
+        </div>
+        
+      </div>
+    </div>
+    
+    <div class="slide">
+     <h1>One implementation: <a href="http://search.cpan.org/dist/SWISH-Prog/">SWISH::Prog</a></h1>
+     
+      <ul>
+       <li>Started as a OO wrapper around Swish-e 2.4 with extra aggregators</li>
+       <li>Added libswish3 Perl bindings in <a href="http://search.cpan.org/dist/SWISH-3/"
+       >SWISH::3</a></li>
+       <li>Currently has Native (2.4.x), KinoSearch and Xapian backend options</li>
+      </ul>
+      
+    </div>
+
+    <div class="slide">
+     <h1>Another implementation: <tt>swish_xapian</tt></h1>
+     
+     <ul>
+      <li>C++ program distributed with <a href="http://svn.swish-e.org/libswish3">libswish3</a></li>
+      <li>Automatically built if Xapian is already installed</li>
+      <li>Built-in facet support</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>SWISH::Prog</h1>
+
+     <div>
+     Aggregators for: 
+      <ul>
+         <li>filesystem (File::Find)</li>
+         <li>web (WWW::Mechanize)</li>
+         <li>database (DBI)</li>
+         <li>email (Mail::Box)</li>
+         <li>Perl objects (JSON)</li>
+      </ul>
+     </div>
+    </div>
+    
+    <div class="slide">
+     <h1>SWISH::Prog (cont...)</h1>
+     
+     <div>
+     Normalization via SWISH::Filter for:
+     
+      <ul>
+       <li>pdf</li>
+       <li>Office (.doc, .xls, .ppt)</li>
+       <li>gzip</li>
+       <li>images (IPTC)</li>
+       <li>mp3 (ID3)</li> 
+      </ul>
+      
+     </div>
+      
+    </div>
+    
+    <div class="slide">
+     <h1>Real World Project</h1>
+     
+     <ul>
+      <li>Replace database fulltext search</li>
+      <li>Drop search times from ~10 seconds to &lt;1 second</li>
+      <li>Database changes reflected in search within 5 minutes</li>
+      <li>Faceted search results</li>
+      <li>Database heavily normalized</li>
+      <li>Javascript client for the Cool Factor</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>What I Did</h1>
+     
+     <ul>
+      <li>Denormalize database records</li>
+      <li>Serialize as XML and write to disk</li>
+      <li>Index XML, specifying "interesting" fields as MetaNames+PropertyNames</li>
+      <li>Query database every <i>N</i> minutes, 
+      serialize new/changed records, add them to index</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>What I Used</h1>
+     
+     For indexing:
+     
+     <ul>
+      <li>Rose::DBx::Object::Indexed (see also DBIx::Class::Indexed)</li>
+      <li>Search::Tools</li>
+      <li>SWISH::Prog</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>What I Used (cont...)</h1>
+     
+     For searching:
+     
+     <ul>
+      <li>SWISH::Prog</li>
+      <li>Search::Tools</li>
+      <li>Lingua::Stem::Snowball (used by all 3 engines for stemming)</li>
+      <li>Search::Query</li>
+      <li>CHI (for caching facets)</li>
+      <li>DBI+SQLite (for logging and caching terms for autosuggest, spelling, thesaurus, etc)</li>
+     </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>Demo Search::OpenSearch</h1>
+     
+     <ul>
+      <li><a href="http://opensearch.org/">http://opensearch.org/</a></li>
+      <li>ExtJS client</li>
+      <li>Plack server</li>
+      <li>JSON or XML (Atom) response formats</li>
+     </ul>
+     
+    </div>
+    
+    
+    <div class="slide">
+      <h1>Further Reading</h1>
+
+      <div>
+        <ul>
+          <li>my $perl_projects = <a href="http://perl.peknet.com/">http://perl.peknet.com/</a></li>
+          <li><a href="http://dev.swish-e.org/wiki/swish3">http://dev.swish-e.org/wiki/swish3</a></li>
+          <li>Slides and demo code: <a href="http://svn.peknet.com/perl/slides/fp/swish3/"
+          >http://svn.peknet.com/perl/slides/fp/swish3/</a></li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>

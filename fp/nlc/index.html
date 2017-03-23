@@ -1,0 +1,294 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+  <meta name="generator" content=
+  "HTML Tidy for Linux (vers 25 January 2008), see www.w3.org" />
+
+  <title>Taming Account Management with Net::LDAP::Class</title><!-- metadata -->
+  <meta name="generator" content="S5" />
+  <meta name="version" content="S5 1.1" />
+  <meta name="presdate" content="20090207" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Taming Account Management with Net::LDAP::Class</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Taming Account Management with Net::LDAP::Class</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "http://www.peknet.com/~karpet/slides/fp/nlc">http://www.peknet.com/~karpet/slides/fp/nlc</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>Which do you prefer?</h1>
+
+<pre> my $ldap = get_my_ldap_object();          
+ $result = $ldap->add( 
+    'cn=Barbara Jensen, o=University of Michigan, c=US',
+    attr => [
+        'cn'   => ['Barbara Jensen', 'Barb Jensen'],
+        'sn'   => 'Jensen',
+        'mail' => 'b.jensen@umich.edu',
+        'objectclass' => ['top', 'person',
+                          'organizationalPerson',
+                          'inetOrgPerson' ],
+        ]
+    );
+ $result->code 
+    && warn "failed to add entry: ", $result->error ;
+ $mesg = $ldap->unbind;
+      </pre>
+    </div>
+
+    <div class="slide">
+      <h1>Or...</h1>
+
+      <div>
+<pre> use MyLDAPUser;
+ my $ldap = get_my_ldap_object();          
+ my $person = MyLDAPUser->new( ldap => $ldap );
+ $person->cn(['Barbara Jensen', 'Barb Jensen']);
+ $person->sn('Jensen');
+ $person->mail('b.jensen@umich.edu');
+ $person->create;
+
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Analogy</h1>
+
+      <h2>Net::LDAP::Class is to Net::LDAP as DBIx::Class is to DBI</h2>
+
+      <blockquote>
+        Lord, save me from writing [SQL|LDAP filters].
+      </blockquote>
+
+    </div>
+
+    <div class="slide">
+      <h1>Less code, more fun</h1>
+      <div>
+        <ul>
+         <li>Hide your oft-repeated actions away in a library.</li>
+         <li>No pesky Net::LDAP::Message checking.</li>
+         <li>Built-in relationship handlers.</li>
+         <li>CRUD method names.</li>
+         <li>Active Directory? No problem.</li>
+        </ul>
+        
+      </div>
+      
+    </div>
+
+    <div class="slide">
+      <h1>Transactions</h1>
+
+      <div>
+       <ul>
+        <li>Net::LDAP::Batch</li>
+        <li><b>Not</b> ACID, but BTN*</li>
+        <li>automatic rollback</li>
+       </ul>
+      </div>
+      
+      <div>
+      <br/>
+      <br/>
+      <br/>
+      * Better Than Nothing
+      </div>
+
+    </div>
+
+    <div class="slide">
+      <h1>Introspection</h1>
+
+      <div>
+<pre> package MyLDAPUser;
+ use base qw( Net::LDAP::Class );
+ 
+ __PACKAGE__->metadata->setup(
+    use_loader      => 1,
+    object_classes  => [qw( posixAccount )], # optional
+ );
+ 
+ sub init_ldap {
+    return Net::LDAP->new( 'ldap.mycompany.org' );
+ }
+ 
+ 1;
+</pre>
+
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Integration</h1>
+      
+      <div>
+<pre> use MyLDAPUser;
+ use MyORMClass;
+ my @attrs = qw( uidNumber gidNumber lastModified );
+ MyLDAPUser->act_on_all(
+   sub {
+     my $ldapuser = shift;
+     my $dbuser = MyORMClass->new( 
+        username => $ldapuser->username )
+            ->load_or_insert;
+     for my $attr (@attrs) { 
+        $dbuser->$attr( $ldapuser->$attr ); 
+     }
+     $dbuser->save;
+   },
+   { ldap => Net::LDAP->new( 'ldap.mycompany.org' ) }
+ );
+</pre>
+    </div>
+    
+    </div>
+
+
+    <div class="slide">
+      <h1>Validation (Little Bobby Tables)</h1><br />
+      <img src="http://imgs.xkcd.com/comics/exploits_of_a_mom.png" 
+       /> 
+      <br/>
+      <a href="http://xkcd.com/327/">xkcd ftw</a>
+    </div>
+    
+    <div class="slide">
+      <h1>Validation</h1>
+      
+      <div>
+<pre> package MyLDAPUser;
+ sub validate {
+    my ( $self, $attr, $value ) = @_;
+    my $method = 'validate_' . $attr;
+    return $self->can($method) 
+        ? $self->$method($value) 
+        : 1;
+ }
+ 
+ sub validate_uid {
+    my ( $self, $value ) = @_;
+    croak "invalid uid: $value" 
+        unless $value =~ m/^\w+$/;
+ }
+</pre>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <h1>Convenience</h1>
+
+      <div>
+        <ul>
+          <li>Passwords automatically set/encoded on save.</li>
+          <li>A rose by any other username...</li>
+          <li>NLC objects stringify to first unique attribute (username).</li>
+          <li>Group relationships baked in.</li>
+          
+        </ul>
+      </div>
+    </div>
+    
+    <div class="slide">
+      <h1>Groups</h1>
+
+      <div>
+<pre> use MyLDAPUser;
+
+ my $user = MyLDAPUser->new( username => 'larry' )
+    ->read;
+ 
+ printf("user %s primary group is %s\n", 
+    $user, $user->group);
+  
+ for my $group ($user->groups) {
+    printf(" secondary group: %s\n", $group);
+ }    
+</pre>
+      </div>
+    </div>
+    
+    
+    <div class="slide">
+      <h1>Groups (continued)</h1>
+
+      <div>
+<pre> use MyLDAPUser;
+ use MyLDAPGroup;
+
+ my $user  = MyLDAPUser->new( username => 'larry' )
+    ->read_or_create;
+ my $group = MyLDAPGroup->new( name => 'stooges' )
+    ->read_or_create;
+ 
+ $user->add_to_group( $group ) 
+    unless $group->has_user( $user );
+    
+ $user->save;
+</pre>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Example code</h1>
+      Note: this slide added post-presentation.
+      You can find example code in the <a href="https://svn.msi.umn.edu/sw/perl/Net-LDAP-Class/trunk/example/">Subversion tree for Net::LDAP::Class</a>.
+    </div>
+
+    <div class="slide">
+      <h1>Credits</h1>
+
+      <div>
+        <ul>
+
+          <li>Bridget Kromhout for reviewing these slides</li>
+          <li>Minnesota Supercomputing Institute for sponsoring development.</li>
+          <li>https://svn.msi.umn.edu/sw/perl/</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+</body>
+</html>
