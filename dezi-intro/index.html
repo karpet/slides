@@ -1,0 +1,174 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <title>Intro to Dezi</title>
+
+  <meta name="presdate" content="20100206" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Intro to Dezi</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Intro to Dezi</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "https://svn.publicradio.org/sw/tech-talks/dezi-intro"
+      >https://svn.publicradio.org/sw/tech-talks/dezi-intro</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>0. Dezi</h1>
+
+    <ul>
+     <li>Perl search platform</li>
+     <li>REST oriented</li>
+     <li>a.k.a. Swish3 web service</li>
+    </ul>
+
+    </div>
+
+    <div class="slide">
+      <h1>1. Perl search platform</h1>
+      
+      <ul>
+       <li><a href="http://lucy.apache.org/">Apache Lucy</a></li>
+       <li><a href="http://plackperl.org/">Plack</a></li>
+       <li><a href="https://metacpan.org/module/Search::OpenSearch">Search::OpenSearch</a></li>
+       <li><a href="https://metacpan.org/module/SWISH::Prog">SWISH::Prog</a></li>
+       <li><a href="https://metacpan.org/module/Search::Tools">Search::Tools</a></li>
+       <li><a href="https://metacpan.org/module/Search::Query">Search::Query</a></li>
+      </ul>
+
+    </div>
+    
+    <div class="slide">
+     <h1>2. REST Oriented</h1>
+     
+     <pre>
+ GET      /search?q=foo    # return search results for 'foo'
+ POST     /index/foo       # add or update document 'foo'
+ PUT      /index/foo       # add (only) document 'foo'
+ GET      /index/foo       # return document 'foo'
+ DELETE   /index/foo       # remove document 'foo'
+ COMMIT   /index           # write pending changes
+ POST     /commit          # same as COMMIT /index
+ ROLLBACK /index           # abort pending changes
+ POST     /rollback        # same as ROLLBACK /index
+ GET      /ui              # return Dezi::UI HTML
+     </pre>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>3. A.K.A. Swish3 web service</h1>
+     
+     <ul>
+      <li>HTTP layer is very thin</li>
+      <li><code>swish3</code></li>
+      <li><a href="http://swish-e.org/swish3">Alternate backend IR libs</a></li>
+     </ul>
+ 
+    </div>
+    
+    <div class="slide">
+     <h1>4. JSON</h1>
+     
+<pre>
+% curl -XPOST http://localhost:5000/foo \
+  -d '&lt;doc&gt;&lt;title&gt;bar&lt;title&gt;foo&lt;/doc&gt;' \
+  -H 'Content-Type: application/xml' 
+
+{"success":1,"build_time":"1.20023","total":1,"code":"202"}
+
+% curl -XPOST http://localhost:5000/index/bar \
+   -d '{"title":"ima json doc","body":"hear me roar"}' \
+   -H 'Content-Type: application/json'
+
+{"success":1,"build_time":"0.01309","total":1,"code":"202"}
+
+% curl -XCOMMIT http://localhost:5000/index
+
+{"success":1,"build_time":"0.09501","total":2,"code":"200"}
+</pre>
+
+    </div>
+    
+    <div class="slide">
+     <h1>5. SPORE</h1>
+
+     <a href="https://github.com/SPORE/specifications">Discoverable REST spec</a>
+     
+     <pre>
+% curl http://localhost:5000/ | json_xs
+
+{
+   "api_base_url" : "http://localhost:5000",
+   "api_format" : [
+      "JSON",
+      "ExtJS",
+      "XML"
+   ],
+   // ...
+   "description" : "This is a Dezi search server. See http://dezi.org/ for more details.",
+}
+    </pre>
+      
+    </div>
+
+    <div class="slide">
+     <h1>6. More Docs</h1>
+
+     <ul>
+      <li><a href="http://dezi.org/">dezi.org</a></li>
+      <li><a href="https://metacpan.org/module/Dezi::Tutorial">Tutorial</a></li>
+      <li><a href="https://metacpan.org/module/Dezi::Architecture">Architecture</a></li>
+    </ul>
+
+    </div>
+    
+    <div class="slide">
+     <h1>7. Examples</h1>
+     
+    </div>
+    
+<!-- end slides -->
+
+  </div>
+</body>
+</html>

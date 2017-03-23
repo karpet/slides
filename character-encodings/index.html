@@ -1,0 +1,189 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+ <title>Character Encodings</title>
+
+  <meta name="presdate" content="20100206" />
+  <meta name="author" content="Peter Karman" />
+  <!-- configuration parameters -->
+  <meta name="defaultView" content="slideshow" />
+  <meta name="controlVis" content="hidden" />
+  <!-- style sheet links -->
+  <link rel="stylesheet" href="ui/default/slides.css" type=
+  "text/css" media="projection" id="slideProj" />
+  <link rel="stylesheet" href="ui/default/outline.css" type=
+  "text/css" media="screen" id="outlineStyle" />
+  <link rel="stylesheet" href="ui/default/print.css" type=
+  "text/css" media="print" id="slidePrint" />
+  <link rel="stylesheet" href="ui/default/opera.css" type=
+  "text/css" media="projection" id="operaFix" /><!-- S5 JS -->
+
+  <script src="ui/default/slides.js" type="text/javascript">
+</script>
+</head>
+
+<body>
+  <div class="layout">
+    <div id="controls">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="currentSlide">
+      <!-- DO NOT EDIT -->
+    </div>
+
+    <div id="header"></div>
+
+    <div id="footer">
+      <h1>Character Encodings</h1>
+    </div>
+  </div>
+
+  <div class="presentation">
+    <div class="slide">
+      <h1>Character Encodings</h1>
+
+      <h3>Peter Karman</h3>
+
+      <h4><a href=
+      "https://svn01.publicradio.org/sw/tech-talks/character-encodings"
+      >https://svn01.publicradio.org/sw/tech-talks/character-encodings</a></h4>
+    </div>
+
+    <div class="slide">
+      <h1>0. Intro</h1>
+
+    <ul>
+     <li>Just Enough History</li>
+     <li>Defense against the Dark Arts</li>
+     <li>pin.org example</li>
+    </ul>
+
+    </div>
+
+    <div class="slide">
+      <h1>1. Just Enough History</h1>
+      
+      <ul>
+       <li><a href="http://en.wikipedia.org/wiki/ASCII">ASCII</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/Latin1">Latin1</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/ANSI">ANSI</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/UTF-8">UTF-8</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/UTF-16">UTF-16</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/UTF-32">UTF-32</a></li>
+       <li><a href="http://www.joelonsoftware.com/articles/Unicode.html">Joel on Encodings</a></li>
+       <li><a href="http://www.cl.cam.ac.uk/~mgk25/unicode.html">UTF-8/Unicode FAQ</a></li>
+      </ul>
+
+    </div>
+    
+    <div class="slide">
+      <h1>2. Just Enough History, cont</h1>
+      
+      <ul>
+       <li><a href="http://en.wikipedia.org/wiki/Glyph">Glyph</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/Grapheme">Grapheme</a></li>
+       <li><a href="http://en.wikipedia.org/wiki/Hexadecimal">Hexadecimal</a></li>
+      </ul>
+
+    </div>
+    
+    <div class="slide">
+     <h1>2. Defense against the Dark Arts</h1>
+     
+      <ul>
+       <li><a href="https://svn01.publicradio.org/pin/shared-lib/trunk/Encoding.php">PHP</a></li>
+       <li><a href="https://metacpan.org/module/Search::Tools::UTF8">Perl</a></li>
+       <li><a href="https://metacpan.org/module/Search::Tools::Transliterate">More Perl</a></li>
+       <li><a href="http://opensource.apple.com/source/perl/perl-24.1/perl/ext/Encode/bin/unidump">unidump</a></li>
+       <li><a href="http://256.com/gray/docs/misc/hexdump_manual_how_to.html">hexdump</a></li>
+       <li><a href="http://tympanus.net/codrops/2009/08/31/solving-php-mysql-utf-8-issues/">PHP+mysql</a></li>
+      </ul>
+     
+    </div>
+    
+    <div class="slide">
+     <h1>3. Defense: Perl</h1>
+     
+<pre>
+#!/usr/bin/env perl
+#
+# test the UTF8-ness of a file
+
+use strict;
+use warnings;
+use Search::Tools::UTF8;
+use Search::Tools;
+
+if ( !@ARGV ) {
+    die "usage: $0 file\n";
+}
+
+for my $file (@ARGV) {
+    my $buf = Search::Tools->slurp($file);
+    printf( "is_flagged_utf8=%d\n",     is_flagged_utf8($buf) );
+    printf( "is_valid_utf8=%d\n",       is_valid_utf8($buf) );
+    printf( "is_perl_utf8_string=%d\n", is_perl_utf8_string($buf) );
+    printf( "is_sane_utf8=%d\n",        is_sane_utf8( $buf, 1 ) );
+
+    print " ... running through to_utf8(), testing again.\n";
+    $buf = to_utf8($buf);
+    printf( "is_flagged_utf8=%d\n",     is_flagged_utf8($buf) );
+    printf( "is_valid_utf8=%d\n",       is_valid_utf8($buf) );
+    printf( "is_perl_utf8_string=%d\n", is_perl_utf8_string($buf) );
+    printf( "is_sane_utf8=%d\n",        is_sane_utf8( $buf, 1 ) );
+}
+</pre>
+    </div>
+    
+    
+    <div class="slide">
+     <h1>4. Defense: Perl, cont</h1>
+     
+<pre>
+#!/usr/bin/env perl
+#
+# print chart of chars and corresponding hexdump vals
+# just latin1 by default
+# otherwise, specify start/stop numerals at cmd line
+#
+
+use strict;
+use warnings;
+my $NUM_COLS = 3;
+binmode STDOUT, ':utf8';
+print '   ';
+my $c     = 0;
+my $start = shift @ARGV || 161;
+my $stop  = shift @ARGV || 255;
+
+for ( 33 .. 126, $start .. $stop ) {
+    printf( "%05d  %c  0x%05x     ", $_, $_, $_ );
+    if ( ++$c == $NUM_COLS ) {
+        print "\n   ";
+        $c = 0;
+    }
+}
+print "\n";
+</pre>
+    </div>
+    
+    <div class="slide">
+     <h1>5. pin.org example</h1>
+
+<pre>
+    # clean up some encoding problems
+    $buf =~ s/\xc2\xa0/&amp;#160;/g;
+    $buf =~ s/\xc2\xbb/&amp;#187;/g;
+
+</pre>
+    </div>
+    
+    
+<!-- end slides -->
+
+  </div>
+</body>
+</html>
