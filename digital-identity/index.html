@@ -5,7 +5,7 @@
 <head>
  <title>Digital Identity</title>
 
-  <meta name="presdate" content="20100206" />
+  <meta name="presdate" content="20220325" />
   <meta name="author" content="Peter Karman" />
   <!-- configuration parameters -->
   <meta name="defaultView" content="slideshow" />
@@ -23,8 +23,14 @@
   <script src="ui/default/slides.js" type="text/javascript"></script>
 
   <style>
-    .slide ul {
-      margin-top: 10rem;
+    .slide .big {
+      font-size: 200%;
+    }
+    .center {
+      text-align: center;
+    }
+    .margin-top {
+      margin-top: 2rem;
     }
   </style>
 </head>
@@ -43,6 +49,7 @@
 
     <div id="footer">
       <h1>Digital Identity</h1>
+      <h2>Peter Karman</h2>
     </div>
   </div>
 
@@ -58,27 +65,151 @@
     </div>
 
     <div class="slide">
-      <img src="https://images.squarespace-cdn.com/content/v1/5c3e06ceb98a78156ebe8c8c/1549921000369-QQZ5T9343P07T69VMS36/1993+07+05+internet+high+res.HG+On+t.jpg?format=400w" />
+      <div class="center">
+        <img src="https://images.squarespace-cdn.com/content/v1/5c3e06ceb98a78156ebe8c8c/1549921000369-QQZ5T9343P07T69VMS36/1993+07+05+internet+high+res.HG+On+t.jpg?format=400w" />
+      </div>
     </div>
     <div class="slide">
-      <ul class="incremental">
+      <h1>Nobody knows you're a dog</h1>
+      <ul class="big incremental">
         <li>
-          <a href="https://www.plsteiner.com/cartoons#/newyorker">Peter Steiner's cartoon</a>
+          Published in 1993, <a href="https://www.plsteiner.com/cartoons#/newyorker">Peter Steiner's cartoon</a>
           is the <a href="https://en.wikipedia.org/wiki/On_the_Internet,_nobody_knows_you%27re_a_dog">most reproduced New Yorker cartoon of all time.</a>
         </li>
         <li>
-          because who you are on the internet has always been a Hard Problem
+          Who you are on the internet has always been a Hard Problem
         </li>
       </ul>
     </div>
     
     <div class="slide">
+      <h1>NIST 800-63-3</h1>
+
+      <ul class="big incremental">
+       <li>Passwords</li>
+       <li>Authenticator Assurance Level (AAL)</li>
+       <li><a href="https://pages.nist.gov/800-63-3/sp800-63a.html#63aSec4-Table">Identity Assurance Level (IAL)</a></li>
+      </ul>
      
     </div>
     
     <div class="slide">
-     
+      <h1>Passwords</h1>
+
+      <ul class="big incremental">
+        <li>Length most important</li>
+        <li>Complexity is counterproductive</li>
+        <li>Hard to guess, easy to remember</li>
+      </ul>
     </div>
+
+    <div class="slide">
+      <h1>Passwords (cont)</h1>
+      <div class="big">
+        Your gov IT is likely not following <a href="https://pages.nist.gov/800-63-3/sp800-63b.html#appA">NIST guidelines</a>.
+        <a href="https://pages.nist.gov/800-63-FAQ/#q-b05">Forced expiration</a>, <a href="https://pages.nist.gov/800-63-FAQ/#q-b06">composition</a> (UPPER, lower, punctuation, etc), and 
+        <a href="https://pages.nist.gov/800-63-FAQ/#q-b07">security questions</a> (mother's maiden name) are explicitly discouraged.</li>
+      </div> 
+    </div>
+
+    <div class="slide">
+      <h1>Authenticator Assurance Level 1</h1>
+      <div class="big">
+       <h2><a href="https://pages.nist.gov/800-63-3/sp800-63b.html#41-authenticator-assurance-level-1">AAL1</a></h2>
+       <div>"some assurance" with single- or multi-factor</div>
+       <div>Example: password</div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Authenticator Assurance Level 2</h1>
+      <div class="big">
+       <h2><a href="https://pages.nist.gov/800-63-3/sp800-63b.html#42-authenticator-assurance-level-2">AAL2</a></h2>
+       <div>"high confidence" with two distinct factors, approved cryptography</div>
+       <div>Example: password + OTP</div>
+      </div>
+    </div>
+
+    <div class="slide">
+     <h1>Authenticator Assurance Level 3</h1>
+     <div class="big">
+      <h2><a href="https://pages.nist.gov/800-63-3/sp800-63b.html#43-authenticator-assurance-level-3">AAL3</a></h2>
+      <div>"very high confidence" with multi-factor using hardware-based authenticator, approved cryptography.</div>
+      <div>Example: PIV card + PIN</div>
+     </div>
+    </div>
+
+    <div class="slide">
+      <h1>Identity Proofing</h1>
+
+      <div class="center margin-top">
+       <img width="800" src="https://pages.nist.gov/800-63-3/sp800-63a/media/ProofingProcess.png" />
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>AAL + IAL</h1>
+
+      <div class="big">
+      Your Identity Assurance Level cannot be higher than your Authenticator Assurance Level.
+       <div>
+        Example: IAL2 requires AAL2 or higher. IAL3 requires AAL3.
+       </div>
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Identity Assurance Level 1</h1>
+      <div class="big">
+       <h2><a href="https://pages.nist.gov/800-63-3/sp800-63a.html#43-identity-assurance-level-1">IAL1</a></h2>
+       <div>
+       Personal information MAY be collected but SHALL NOT be validated or verified. All attributes are understood to be self-asserted.
+       </div>
+      </div>
+      <div>
+      You can be a dog on the internet.
+      </div>
+    </div>
+
+    <div class="slide">
+      <h1>Identity Assurance Level 2</h1>
+      <div class="big">
+       <h2><a href="https://pages.nist.gov/800-63-3/sp800-63a.html#44-identity-assurance-level-2">IAL2</a></h2>
+       <div>
+        Personal information must be collected, validated and verified, in-person (physical) or online (remote).
+       </div>
+      </div>
+      <ul class="incremental">
+        <li>"Superior" or "Strong" + "Fair" evidence</li>
+        <li>"Strong" verification process</li>
+        <li>Address confirmation</li>
+      </ul>
+      <div>You might be a dog on the internet, but pretty good chance you aren't.</div>
+    </div>
+
+    <div class="slide">
+      <h1>Identity Assurance Level 3</h1>
+      <div class="big">
+       <h2><a href="https://pages.nist.gov/800-63-3/sp800-63a.html#-45-identity-assurance-level-3">IAL3</a></h2>
+       <div>
+        Same as IAL2, plus:
+        <ul class="incremental">
+         <li>Must be in-person</li>
+         <li>Must collect and retain biometric evidence</li>
+         <li>Address confirmation to postal address</li>
+        </ul>
+       </div>
+      </div>
+      <div>You proved you aren't a dog in real life, and AAL3+IAL3 means you very likely aren't one on the internet.</div>
+    </div>
+
+    <div class="slide">
+      <h1>Credits</h1>
+
+      <ul class="big">
+        <li>Peter Steiner</li>
+        <li><a href="https://pages.nist.gov/800-63-3/">NIST 800-63-3</a></li>
+      </ul>
     
   </div>
 </body>
