@@ -5,6 +5,7 @@ Slides from various presentations.
 * [Catalyst/](Catalyst/)
 * [character-encodings/](character-encodings/)
 * [dezi-intro/](dezi-intro/)
+* [digital-identity/](digital-identity/)
 * [kansas-linux-fest-2017/](kansas-linux-fest-2017/)
 * [ten-unix-commands/](ten-unix-commands/)
 * [cms/](fp/cms/)
